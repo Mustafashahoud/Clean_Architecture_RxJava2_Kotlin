@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+
+        <import type="com.android.cleanarch.bitcoinapp.features.bitcoinchart.model.BitcoinChartViewEntity" />
+
+        <import type="com.android.cleanarch.bitcoinapp.common.ErrorMessageUtil" />
+
+        <import type="com.android.cleanarch.bitcoinapp.common.Resource" />
+
+        <import type="com.android.cleanarch.bitcoin.domain.base.errorhandling.ErrorEntity" />
+
+
+        <variable
+            name="resource"
+            type="Resource&lt;BitcoinChartViewEntity>" />
+
+        <variable
+            name="retryCallback"
+            type="com.android.cleanarch.bitcoinapp.common.RetryCallback" />
+
+        <variable
+            name="goBackCallback"
+            type="com.android.cleanarch.bitcoinapp.common.GoBackCallback" />
+
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:background="@color/colorPrimary">
+
+        <TextView
+            android:id="@+id/current_price_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/textHighlightColor"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/market_price_description_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setAnimatedPriceText="@{resource.data.bitcoinPrice}"
+
+            tools:text="$30,036.69" />
+        <!--        app:showGone="@{!(resource instanceof Resource.Error)}"-->
+
+        <TextView
+            android:id="@+id/market_price_description_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="48dp"
+            android:gravity="center"
+            android:textColor="@color/textColor"
+            app:layout_constraintBottom_toTopOf="@+id/time_span_button_group"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/current_price_text_view"
+            app:setAnimatedPriceText="@{resource.data.description}"
+            tools:text="Average USD market price across major bitcoin exchanges." />
+        <!--        app:showGone="@{!(resource instanceof Resource.Error)}"-->
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/time_span_button_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:checkedButton="@id/thirty_days_button"
+            app:layout_constraintBottom_toTopOf="@+id/market_price_chart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/market_price_description_text_view"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+            <!--            app:showGone="@{!(resource instanceof Resource.Error)}"-->
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/thirty_days_button"
+                style="@style/AppTheme.ChartsFeature.ToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/feature_charts_toggle_button_height"
+                android:text="@string/feature_charts_filter_thirty_days" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/three_months_button"
+                style="@style/AppTheme.ChartsFeature.ToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/feature_charts_toggle_button_height"
+                android:text="@string/feature_charts_filter_three_months" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/one_year_button"
+                style="@style/AppTheme.ChartsFeature.ToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/feature_charts_toggle_button_height"
+                android:text="@string/feature_charts_filter_one_year" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/all_time_button"
+                style="@style/AppTheme.ChartsFeature.ToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/feature_charts_toggle_button_height"
+                android:text="@string/feature_charts_filter_all" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <com.android.cleanarch.bitcoinapp.features.bitcoinchart.custom.BitcoinChartLineChart
+            android:id="@+id/market_price_chart"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/time_span_button_group"
+            app:setChartData='@{resource.data}'
+            app:showHide="@{resource.data != null}" />
+
+        <ProgressBar
+            android:id="@+id/market_price_chart_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            app:showHide="@{resource instanceof Resource.Loading}" />
+
+        <TextView
+            android:id="@+id/error_message_title_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:text="@string/error_title"
+            android:textColor="@color/textColor"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/error_message_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:showHide="@{resource instanceof Resource.Error }" />
+
+        <TextView
+            android:id="@+id/error_message_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:text="@{ErrorMessageUtil.getErrorMessage(context, resource.error) }"
+            android:textColor="@color/textColor"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/error_message_title_text_view"
+            app:showHide="@{resource instanceof Resource.Error }" />
+
+        <TextView
+            android:id="@+id/retry_text_view"
+            style="@style/RetryStyle"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:onClick="@{() -> retryCallback.retry()}"
+            app:drawableTopCompat="@drawable/ic_retry"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/error_message_text_view"
+            app:layout_constraintVertical_bias="0.146"
+            app:showHide="@{resource.error instanceof ErrorEntity.Network}" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/go_back_button"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/white"
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="@{() -> goBackCallback.goBack()}"
+            android:text="@string/go_back"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:cornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:showHide="@{resource.error instanceof ErrorEntity.Server || resource.error instanceof ErrorEntity.Unknown}"
+            app:strokeColor="@color/colorAccent"
+            tools:ignore="UnusedAttribute" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

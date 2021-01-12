@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/BitcoinChartFragment">
+
+    <fragment
+        android:id="@+id/BitcoinChartFragment"
+        android:name="com.android.cleanarch.bitcoinapp.features.bitcoinchart.ui.BitcoinPriceChartFragment"
+        android:label="@string/bitcoin_chart_fragment_name"
+        tools:layout="@layout/fragment_bitcoin_price_chart" />
+</navigation>

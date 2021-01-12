@@ -1,0 +1,13 @@
+{
+  "status": "ok",
+  "name": "Market Price (USD)",
+  "unit": "USD",
+  "period": "day",
+  "description": "Average USD market price across major bitcoin exchanges.",
+  "values": [
+    {
+      "x": 1.0,
+      "y": 1.0
+    }
+  ]
+}

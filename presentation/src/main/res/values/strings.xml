@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Bitcoin</string>
+    <string name="feature_charts_filter_thirty_days">30 Days</string>
+    <string name="feature_charts_filter_three_months">3 Months</string>
+    <string name="feature_charts_filter_one_year">1 Year</string>
+    <string name="feature_charts_filter_all">All time</string>
+    <string name="error_title">Ooops! :(</string>
+    <string name="network_error_message">Unable to get market price information.\nPlease, check your connection and try again.</string>
+    <string name="server_error_message">There is a problem in the server.\nPlease try again later</string>
+    <string name="unknown_error_message">Un unexpected error occurred.\nPlease try again later</string>
+    <string name="bitcoin_chart_fragment_name">BitcoinChartFragment</string>
+    <string name="retry">Retry</string>
+    <string name="go_back">Go back</string>
+
+</resources>
